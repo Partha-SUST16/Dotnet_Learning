@@ -12,7 +12,7 @@ namespace DatingApp.API.Dtos
         public string Username { get; set; }
 
         [Required]
-        [StringLength(8,MinimumLength =2,ErrorMessage ="password length must be 4-8 char.")]
+        [StringLength(8,MinimumLength =3,ErrorMessage ="password length must be 4-8 char.")]
         public string Password { get; set; }
     }
 }
