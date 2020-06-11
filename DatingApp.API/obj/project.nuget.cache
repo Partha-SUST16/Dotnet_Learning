@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "pxQy1631q/jSLZqXu+C0g/3VjX8Q1yU0fSQ6Fsd9sQcWVJDMY+OQdJJyqCvi5J3tNJdmRiMWjRPtAgZ7DSc4eQ==",
+  "dgSpecHash": "D0pK7cbb/AMOe6UgApZpsDecxZS9UwqKSD0rpJl2DClmn37ehTa4zprAp22gysPt8t1rYh+VEhDr34xPfIN0ng==",
   "success": true,
   "projectFilePath": "G:\\DatingApp\\DatingApp.API\\DatingApp.API.csproj",
   "expectedPackageFiles": [
@@ -86,8 +86,7 @@
     "C:\\Users\\station1\\.nuget\\packages\\system.threading.tasks.extensions\\4.5.2\\system.threading.tasks.extensions.4.5.2.nupkg.sha512",
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder\\system.xml.readerwriter\\4.3.0\\system.xml.readerwriter.4.3.0.nupkg.sha512",
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder\\system.xml.xdocument\\4.3.0\\system.xml.xdocument.4.3.0.nupkg.sha512",
-    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder\\system.xml.xmldocument\\4.3.0\\system.xml.xmldocument.4.3.0.nupkg.sha512",
-    "C:\\Users\\station1\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\3.1.2\\microsoft.aspnetcore.app.ref.3.1.2.nupkg.sha512"
+    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder\\system.xml.xmldocument\\4.3.0\\system.xml.xmldocument.4.3.0.nupkg.sha512"
   ],
   "logs": []
 }
