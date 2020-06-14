@@ -10,7 +10,7 @@ import { AlertifyService } from '../_service/alertify.service';
 export class NavComponent implements OnInit {
   model: any = {};
   constructor(
-    private authService: AuthService,
+    public authService: AuthService,
     private alertify: AlertifyService
   ) {}
 
@@ -29,7 +29,7 @@ export class NavComponent implements OnInit {
     );
   }
   loggedIn() {
-    return !!localStorage.getItem('token');
+    return this.authService.isLoggedIn();
   }
   logout() {
     localStorage.removeItem('token');
