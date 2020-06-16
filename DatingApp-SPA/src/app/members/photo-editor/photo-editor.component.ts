@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Photo } from 'src/app/_model/photo';
 import { FileUploader } from 'ng2-file-upload';
 import { environment } from './../../../environments/environment';
@@ -14,6 +14,7 @@ import { error } from 'protractor';
 })
 export class PhotoEditorComponent implements OnInit {
   @Input() photos: Photo[];
+  @Output() getMemberPhotoChange = new EventEmitter<string>();
   uploader: FileUploader;
   hasBaseDropZoneOver: boolean;
   response: string;
@@ -72,6 +73,7 @@ export class PhotoEditorComponent implements OnInit {
           this.currentMain = this.photos.filter((p) => p.isMain === true)[0];
           this.currentMain.isMain = false;
           photo.isMain = true;
+          this.getMemberPhotoChange.emit(photo.url);
           this.alertify.success('update main pic successfull');
         },
         (error) => {
