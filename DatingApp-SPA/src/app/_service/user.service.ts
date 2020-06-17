@@ -5,11 +5,6 @@ import { Observable } from 'rxjs';
 import { User } from '../_model/user';
 import { environment } from './../../environments/environment';
 
-// const httpOptions = {
-//   headers: new HttpHeaders({
-//     Authorization: 'Bearer ' + localStorage.getItem('token'),
-//   }),
-// };
 @Injectable({
   providedIn: 'root',
 })
