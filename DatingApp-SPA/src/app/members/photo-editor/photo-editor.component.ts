@@ -6,6 +6,7 @@ import { AuthService } from 'src/app/_service/auth.service';
 import { UserService } from 'src/app/_service/user.service';
 import { AlertifyService } from 'src/app/_service/alertify.service';
 import { error } from 'protractor';
+import { threadId } from 'worker_threads';
 
 @Component({
   selector: 'app-photo-editor',
@@ -73,12 +74,36 @@ export class PhotoEditorComponent implements OnInit {
           this.currentMain = this.photos.filter((p) => p.isMain === true)[0];
           this.currentMain.isMain = false;
           photo.isMain = true;
-          this.getMemberPhotoChange.emit(photo.url);
+          this.authService.changeMemberPhoto(photo.url);
+          this.authService.currentUser.photoUrl = photo.url;
+          localStorage.setItem(
+            'user',
+            JSON.stringify(this.authService.currentUser)
+          );
           this.alertify.success('update main pic successfull');
         },
         (error) => {
           this.alertify.error(error);
         }
       );
+  }
+
+  deletePhoto(id: number) {
+    this.alertify.confirm('Sure??', () => {
+      this.userService
+        .deletePhoto(this.authService.decodedToken.nameid, id)
+        .subscribe(
+          () => {
+            this.photos.splice(
+              this.photos.findIndex((p) => p.id === id),
+              1
+            );
+            this.alertify.success('Deleted photo');
+          },
+          (err) => {
+            this.alertify.error(err);
+          }
+        );
+    });
   }
 }

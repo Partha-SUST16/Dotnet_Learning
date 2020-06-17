@@ -3,7 +3,7 @@
         <img src="{{ photo.url }}" class="img-thumbnail p-1" alt="" />
         <div class="text-center">
             <button class="btn btn-sm mr-1" (click)="setMainPhoto(photo)" [ngClass]="photo.isMain?'btn-success active':'btn-secondary'" [disabled]="photo.isMain">Main</button>
-            <button class="btn btn-sm btn-danger">
+            <button class="btn btn-sm btn-danger" (click)="deletePhoto(photo.id)" [disabled]="photo.isMain">
         <i class="fa fa-trash-o"></i>
       </button>
         </div>
