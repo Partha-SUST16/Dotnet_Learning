@@ -24,16 +24,17 @@
                     </div>
                     <div>
                         <strong>Last Active:</strong>
-                        <p>{{ user.lastActive }}</p>
+                        <p>{{ user.lastActive | timeago }}</p>
                     </div>
                     <div>
                         <strong>Member since:</strong>
-                        <p>{{ user.created }}</p>
+                        <p>{{ user.created | date: "mediumDate" }}</p>
                     </div>
                 </div>
                 <div class="card-footer">
-                    <button [disabled]="!editForm.dirty" form="editForm" class="btn btn-primary btn-block">Save
-                        Changes</button>
+                    <button [disabled]="!editForm.dirty" form="editForm" class="btn btn-primary btn-block">
+            Save Changes
+          </button>
                 </div>
             </div>
         </div>
@@ -51,9 +52,9 @@
                             <h4>Location Details:</h4>
                             <div class="form-inline">
                                 <label for="city">City</label>
-                                <input type="text" class="form-control" name="city" [(ngModel)]="user.city">
+                                <input type="text" class="form-control" name="city" [(ngModel)]="user.city" />
                                 <label for="city">Country</label>
-                                <input type="text" class="form-control" name="country" [(ngModel)]="user.country">
+                                <input type="text" class="form-control" name="country" [(ngModel)]="user.country" />
                             </div>
                         </form>
                     </tab>
@@ -61,7 +62,6 @@
                         <app-photo-editor [photos]="user.photos" (getMemberPhotoChange)="updateMainPhoto($event)">
                         </app-photo-editor>
                     </tab>
-
                 </tabset>
             </div>
         </div>
