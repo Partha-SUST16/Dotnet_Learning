@@ -12,7 +12,7 @@
     <div class="row">
         <div class="col-sm-4">
             <div class="card">
-                <img class="card-img-top img-thumbnail" src="{{ photoUrl }}" alt="{{ user.knownAs }}" />
+                <img class="card-img-top img-thumbnail" src="{{ photoUrl || '../../../../../assets/user.png' }}" alt="{{ user.knownAs }}" />
                 <div class="card-body">
                     <div>
                         <strong>Location:</strong>
@@ -32,7 +32,8 @@
                     </div>
                 </div>
                 <div class="card-footer">
-                    <button [disabled]="!editForm.dirty" form="editForm" class="btn btn-primary btn-block">Save Changes</button>
+                    <button [disabled]="!editForm.dirty" form="editForm" class="btn btn-primary btn-block">Save
+                        Changes</button>
                 </div>
             </div>
         </div>

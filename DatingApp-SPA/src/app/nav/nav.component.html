@@ -15,13 +15,13 @@
         </ul>
         <div *ngIf="loggedIn()" class="dropdown" dropdown>
             <span class="mr-1">
-        <img src="{{photoUrl}}">
-      </span>
+                <img src="{{photoUrl || '../../../../assets/user.png'}}">
+            </span>
             <a class="dropdown-toggle text-light" dropdownToggle>
-        Welcome {{ authService.decodedToken?.unique_name | titlecase }}
-      </a>
+                Welcome {{ authService.decodedToken?.unique_name | titlecase }}
+            </a>
 
-            <div class="dropdown-menu mt-3" *dropdownMenu>
+            <div class=" dropdown-menu mt-3" *dropdownMenu>
                 <a class="dropdown-item" [routerLink]="['/member/edit']"><i class="fa fa-user"></i> Edit Profile</a>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="#" (click)="logout()"><i class="fa fa-sign-out"></i> Logout</a>
@@ -31,8 +31,8 @@
             <input class="form-control mr-sm-2" type="text" placeholder="Username" name="username" required aria-label="Email" [(ngModel)]="model.username" />
             <input class="form-control mr-sm-2" type="text" placeholder="Password" type="password" name="password" required aria-label="Password" [(ngModel)]="model.password" />
             <button [disabled]="!loginForm.valid" class="btn btn-success my-2 my-sm-0" type="submit">
-        Login
-      </button>
+                Login
+            </button>
         </form>
     </div>
 </nav>
