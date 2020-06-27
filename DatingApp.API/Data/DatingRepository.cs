@@ -55,7 +55,8 @@ namespace DatingApp.API.Data
                 var minDateOfBirth = DateTime.Today.AddYears(-userParams.MaxAge);
                 var maxDateOfBirth = DateTime.Today.AddYears(-userParams.MinAge);
 
-                users = users.Where(u =>  u.DateOfBrith <= maxDateOfBirth);
+                //users = users.Where(u => u.DateOfBrith >= minDateOfBirth && u.DateOfBrith <= maxDateOfBirth);
+                users = users.Where(u => u.DateOfBrith <= maxDateOfBirth);
             }
 
             return await PagedList<User>.CreateAsync(users,userParams.PageNumber,userParams.PageSize);
