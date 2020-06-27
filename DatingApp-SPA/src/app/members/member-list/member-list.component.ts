@@ -34,6 +34,7 @@ export class MemberListComponent implements OnInit {
     this.userParms.gender = this.user.gender === 'female' ? 'male' : 'female';
     this.userParms.minAge = 18;
     this.userParms.maxAge = 2019;
+    this.userParms.orderBy = 'lastActive';
   }
 
   resetFilters() {
