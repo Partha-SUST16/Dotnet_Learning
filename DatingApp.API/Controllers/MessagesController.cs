@@ -21,26 +21,26 @@ namespace DatingApp.API.Controllers
     {
         private readonly IDatingRepository _repo;
         private readonly IMapper _mapper;
-        public MessagesController(IDatingRepository repo,IMapper mapper)
+        public MessagesController(IDatingRepository repo, IMapper mapper)
         {
             _repo = repo;
             _mapper = mapper;
         }
 
-        [HttpGet("{id}",Name ="GetMessage")]
-        public async Task<IActionResult> GetMessage(int userId,int id)
+        [HttpGet("{id}", Name = "GetMessage")]
+        public async Task<IActionResult> GetMessage(int userId, int id)
         {
             if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
                 return Unauthorized();
 
             var messageFromRepo = await _repo.GetMessage(id);
-            
+
             if (messageFromRepo == null) return NotFound();
 
             return Ok(messageFromRepo);
         }
         [HttpGet]
-        public async Task<IActionResult> GetMessagesForUser(int userId,[FromQuery]MessageParams messageParams)
+        public async Task<IActionResult> GetMessagesForUser(int userId, [FromQuery] MessageParams messageParams)
         {
             if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
                 return Unauthorized();
@@ -57,7 +57,7 @@ namespace DatingApp.API.Controllers
         }
 
         [HttpGet("thread/{recipientId}")]
-        public async Task<IActionResult>GetMessageThread(int userId,int recipientId)
+        public async Task<IActionResult> GetMessageThread(int userId, int recipientId)
         {
             if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
                 return Unauthorized();
@@ -68,10 +68,14 @@ namespace DatingApp.API.Controllers
             return Ok(messageThread);
         }
 
+
+
         [HttpPost]
-        public async Task<IActionResult>CreateMessage(int userId,MessageForCreationDto messageForCreationDto)
+        public async Task<IActionResult> CreateMessage(int userId, MessageForCreationDto messageForCreationDto)
         {
-            if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+            var sender = await _repo.GetUser(userId);
+
+            if (sender.Id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
                 return Unauthorized();
 
             messageForCreationDto.SenderId = userId;
@@ -80,16 +84,41 @@ namespace DatingApp.API.Controllers
 
             if (recipient == null)
                 return BadRequest("Cannot find user");
+
             var message = _mapper.Map<Message>(messageForCreationDto);
 
             _repo.Add(message);
 
-            if(await _repo.SaveAll())
+            if (await _repo.SaveAll())
             {
-                var messageToReturn = _mapper.Map<MessageForCreationDto>(message);
+                var messageToReturn = _mapper.Map<MessageToReturnDto>(message);
                 return CreatedAtRoute("GetMessage", new { userId, id = message.Id }, messageToReturn);
             }
             throw new Exception("Some Error in saving Message");
+        }
+
+        [HttpPost("{id}")]
+        public async Task<IActionResult> DeleteMessage(int id, int userId)
+        {
+            if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+                return Unauthorized();
+
+            var messageFromRepo = await _repo.GetMessage(id);
+
+            if (messageFromRepo.SenderId == userId)
+            {
+                messageFromRepo.SenderDeleted = true;
+            }
+            if (messageFromRepo.RecipientId == userId)
+                messageFromRepo.RecipientDeleted = true;
+
+            if (messageFromRepo.RecipientDeleted && messageFromRepo.SenderDeleted)
+                _repo.Delete(messageFromRepo);
+
+            if (await _repo.SaveAll())
+                return NoContent();
+
+            throw new Exception("Error in deleting message");
         }
     }
 }

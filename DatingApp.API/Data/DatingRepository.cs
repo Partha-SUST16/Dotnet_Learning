@@ -32,7 +32,7 @@ namespace DatingApp.API.Data
 
         public async Task<Photo> GetMainPhotoForUser(int userId)
         {
-            return await  _context.Photos.Where(u => u.UserId == userId).FirstOrDefaultAsync(p => p.IsMain);
+            return await _context.Photos.Where(u => u.UserId == userId).FirstOrDefaultAsync(p => p.IsMain);
         }
 
         public async Task<Photo> GetPhoto(int id)
@@ -43,18 +43,18 @@ namespace DatingApp.API.Data
 
         public async Task<User> GetUser(int id)
         {
-            var user =await _context.Users.Include(p => p.Photos).FirstOrDefaultAsync(u => u.Id == id);
+            var user = await _context.Users.Include(p => p.Photos).FirstOrDefaultAsync(u => u.Id == id);
             return user;
         }
 
         public async Task<PagedList<User>> GetUsers(UserParams userParams)
         {
-            var users =  _context.Users.Include(p => p.Photos).OrderByDescending(u=>u.LastActive).AsQueryable();
+            var users = _context.Users.Include(p => p.Photos).OrderByDescending(u => u.LastActive).AsQueryable();
 
             users = users.Where(u => u.Id != userParams.UserId);
 
             users = users.Where(u => u.Gender == userParams.Gender);
-           
+
             if (userParams.Likers)
             {
                 var userLikers = await GetUserLikes(userParams.UserId, userParams.Likers);
@@ -65,7 +65,7 @@ namespace DatingApp.API.Data
                 var usersLikees = await GetUserLikes(userParams.UserId, userParams.Likers);
                 users = users.Where(u => usersLikees.Contains(u.Id));
             }
-            if (userParams.MinAge != 18 || userParams.MaxAge!=2019)
+            if (userParams.MinAge != 18 || userParams.MaxAge != 2019)
             {
                 var minDateOfBirth = DateTime.Today.AddYears(-userParams.MaxAge);
                 var maxDateOfBirth = DateTime.Today.AddYears(-userParams.MinAge);
@@ -86,10 +86,10 @@ namespace DatingApp.API.Data
                         break;
                 }
             }
-            return await PagedList<User>.CreateAsync(users,userParams.PageNumber,userParams.PageSize);
+            return await PagedList<User>.CreateAsync(users, userParams.PageNumber, userParams.PageSize);
         }
 
-        private async Task<IEnumerable<int>> GetUserLikes(int id,bool likers)
+        private async Task<IEnumerable<int>> GetUserLikes(int id, bool likers)
         {
             var user = await _context.Users.Include(x => x.Liker).Include(x => x.Likees).FirstOrDefaultAsync(u => u.Id == id);
 
@@ -102,7 +102,7 @@ namespace DatingApp.API.Data
 
         public async Task<bool> SaveAll()
         {
-            return await _context.SaveChangesAsync()>0;
+            return await _context.SaveChangesAsync() > 0;
 
         }
 
@@ -119,13 +119,14 @@ namespace DatingApp.API.Data
             switch (messageParams.MessageContainer)
             {
                 case "Inbox":
-                    messages = messages.Where(u => u.RecipientId == messageParams.UserId);
+                    messages = messages.Where(u => u.RecipientId == messageParams.UserId && u.RecipientDeleted == false);
                     break;
                 case "Outbox":
-                    messages = messages.Where(u => u.SenderId == messageParams.UserId);
+                    messages = messages.Where(u => u.SenderId == messageParams.UserId && u.SenderDeleted == false);
                     break;
                 default:
-                    messages = messages.Where(u => u.RecipientId == messageParams.UserId && u.IsRead == false);
+                    messages = messages.Where(u => u.RecipientId == messageParams.UserId && u.IsRead == false
+                        && u.RecipientDeleted == false);
                     break;
             }
 
@@ -137,9 +138,10 @@ namespace DatingApp.API.Data
         {
             var messages = await _context.Messages.Include(u => u.Sender).ThenInclude(p => p.Photos)
                                            .Include(u => u.Recipient).ThenInclude(p => p.Photos)
-                                           .Where(m=>m.RecipientId==userId && m.SenderId==recipitient
-                                                  || m.RecipientId==recipitient && m.SenderId==userId)
-                                           .OrderByDescending(m=>m.MessageSent)
+                                           .Where(m => m.RecipientId == userId && m.RecipientDeleted == false
+                                                    && m.SenderId == recipitient
+                                                  || m.RecipientId == recipitient && m.SenderId == userId && m.SenderDeleted == false)
+                                           .OrderByDescending(m => m.MessageSent)
                                            .ToListAsync();
             return messages;
 
